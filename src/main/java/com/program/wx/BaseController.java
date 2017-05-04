@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.security.MessageDigest;
 import java.util.Arrays;
 import java.util.Collections;
@@ -13,6 +14,7 @@ import java.util.Map;
 import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 public class BaseController {
@@ -20,6 +22,15 @@ public class BaseController {
 	protected static String V_CODE = "randomCode";
 //	public HttpServletRequest request;
 //	public HttpServletResponse response;
+	protected void write(HttpServletResponse resp,String data) {
+		try {
+			resp.getWriter().write(data);
+			resp.getWriter().flush();
+			resp.getWriter().close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 	
 	public HttpSession getSession(HttpServletRequest request) {
 		return request.getSession();
@@ -216,7 +227,7 @@ public class BaseController {
 	
 	protected static BufferedImage generateImage(String s) {
 		try {
-			int width = 80;
+			int width = 120;
 			int height = 25;
 			// 取得一个4位随机字母数字字符串
 			BufferedImage image = new BufferedImage(width, height,

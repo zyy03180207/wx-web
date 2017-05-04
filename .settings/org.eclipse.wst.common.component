@@ -7,6 +7,12 @@
         <dependent-module archiveName="service-api-1.0.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/service-api/service-api">
             <dependency-type>uses</dependency-type>
         </dependent-module>
+        <dependent-module archiveName="online-entity-1.0.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/online-entity/online-entity">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="db-support-1.0.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/db-support/db-support">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
         <property name="context-root" value="wx-web"/>
         <property name="java-output-path" value="/wx-web/target/classes"/>
     </wb-module>
