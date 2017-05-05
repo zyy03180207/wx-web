@@ -2,7 +2,6 @@ package com.program.wx.controller;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.Map;
 
 import javax.imageio.ImageIO;
 import javax.servlet.ServletOutputStream;
@@ -14,13 +13,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.alibaba.fastjson.JSONObject;
 import com.program.wx.BaseController;
+import com.program.wx.Global;
+import com.program.wx.param.AjaxResult;
 import com.program.wx.service.RemoteApiService;
+import com.program.wx.util.StringUtil;
 
-import microservice.api.AjaxResult;
+import microservice.api.ServiceApiHelper;
+import microservice.api.ServiceResult;
 
 @Controller
 @RequestMapping("/")
@@ -43,8 +46,53 @@ public class IndexController extends BaseController {
 
 	@RequestMapping(value = "login",method = RequestMethod.POST)
 	public void loginPost(HttpServletRequest request, HttpServletResponse response) {
-		AjaxResult result = new AjaxResult();
+		AjaxResult ajaxResult = new AjaxResult();
 		String user = getPara(request, "username");
+		String pass = getPara(request, "password");
+		String vcode = getPara(request, "vcode");
+		if(StringUtil.isEmpty(user)) {
+			ajaxResult.setMesg("请输入用户名");
+			this.write(response, ajaxResult);
+			return;
+		}
+		if(StringUtil.isEmpty(pass)) {
+			ajaxResult.setMesg("请输入密码");
+			this.write(response, ajaxResult);
+			return;
+		}
+		if(StringUtil.isEmpty(vcode)) {
+			ajaxResult.setMesg("请输入验证码");
+			this.write(response, ajaxResult);
+			return;
+		}
+		String code = (String) this.getSession(request, V_CODE);
+		if(!vcode.equalsIgnoreCase(code)) {
+			ajaxResult.setMesg("验证码不正确");
+			this.write(response, ajaxResult);
+			return;
+		}
+		String md5Pass = md5(pass);
+		JSONObject object = new JSONObject();
+		object.put("username", user);
+		object.put("password", md5Pass);
+		object.put("vcode", vcode);
+		String json = ServiceApiHelper.formatParam("tb_login", object.toJSONString(), Global.KEY);
+		String resultStr = remoteApiService.getWXAip().execute(json);
+		ServiceResult result = ServiceApiHelper.parseResult(resultStr);
+		//判断登陆结果
+		if(result.isSucc()) {
+			JSONObject dataJson = JSONObject.parseObject(result.getData());
+			JSONObject adminJson = dataJson.getJSONObject("adminUser");
+			this.setSession(request, Global.USER_INFO, adminJson);
+			ajaxResult.setMesg(result.getMesg());
+			ajaxResult.setSucc(true);
+			this.write(response, ajaxResult);
+			return;
+		} else {
+			ajaxResult.setMesg(result.getMesg());
+			this.write(response, ajaxResult);
+			return;
+		}
 	}
 	
 	@RequestMapping(value = "randomCode")

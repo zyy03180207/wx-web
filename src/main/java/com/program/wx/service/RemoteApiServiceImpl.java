@@ -5,9 +5,10 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import microservice.api.ServiceApi;
+
 @Service
 public class RemoteApiServiceImpl implements RemoteApiService {
-	
+
 	@Autowired
 	@Qualifier("wxApi")
 	private ServiceApi wxApi;
@@ -16,6 +17,5 @@ public class RemoteApiServiceImpl implements RemoteApiService {
 		// TODO Auto-generated method stub
 		return wxApi;
 	}
-	
-	
+
 }

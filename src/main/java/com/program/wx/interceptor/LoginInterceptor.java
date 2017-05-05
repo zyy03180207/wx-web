@@ -9,6 +9,7 @@ import javax.servlet.http.HttpSession;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.alibaba.fastjson.JSONObject;
 import com.program.wx.Global;
 
 import microservice.online.entity.TbAdminUser;
@@ -21,13 +22,13 @@ public class LoginInterceptor implements HandlerInterceptor {
 		// TODO Auto-generated method stub
 		String url = request.getRequestURI();
 		HttpSession session = request.getSession();
-		TbAdminUser user = (TbAdminUser) session.getAttribute(Global.USER_INFO);
-		List<TbSecqurity> tbSecqurities = (List<TbSecqurity>) session.getAttribute(Global.SECQURITIES);
+		JSONObject userJson = (JSONObject) session.getAttribute(Global.USER_INFO);
+//		List<TbSecqurity> tbSecqurities = (List<TbSecqurity>) session.getAttribute(Global.SECQURITIES);
 		//是否登录验证,先判断是不是login请求，然后在判断是否登录过
 		if(url.indexOf("login") >= 0) {
 			return true;
 		}
-		if(user == null) {
+		if(userJson == null) {
 			response.sendRedirect(request.getContextPath() + "/login");
 			return false;
 		}

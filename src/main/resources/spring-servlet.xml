@@ -28,7 +28,6 @@
 			<mvc:exclude-mapping path="/assets/**"/>
 			<mvc:exclude-mapping path="/randomCode"/>
 			<mvc:exclude-mapping path="/login"/>
-			<mvc:exclude-mapping path="/index"/>
 			<bean class="com.program.wx.interceptor.LoginInterceptor"></bean>
 		</mvc:interceptor>
 	</mvc:interceptors>

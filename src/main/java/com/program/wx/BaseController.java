@@ -17,11 +17,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.program.wx.param.AjaxResult;
+
 public class BaseController {
 
 	protected static String V_CODE = "randomCode";
-//	public HttpServletRequest request;
-//	public HttpServletResponse response;
 	protected void write(HttpServletResponse resp,String data) {
 		try {
 			resp.getWriter().write(data);
@@ -32,8 +32,29 @@ public class BaseController {
 		}
 	}
 	
+	protected void write(HttpServletResponse resp,AjaxResult result) {
+		try {
+			String data = result.toJSONString();
+//			logger.info("AJAX-WRITE:"+data);
+			resp.getWriter().write(data);
+			resp.getWriter().flush();
+			resp.getWriter().close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
 	public HttpSession getSession(HttpServletRequest request) {
 		return request.getSession();
+	}
+	
+	public void setSession(HttpServletRequest request, String key, Object value) {
+		request.getSession().setAttribute(key, value);
+	}
+	
+	public Object getSession(HttpServletRequest request, String key) {
+		return request.getSession().getAttribute(key);
 	}
 	
 	/**

@@ -100,7 +100,7 @@
 														class="ace" /> <span class="lbl"> 记住我 </span>
 													</label>
 
-													<button type="button"
+													<button type="button" onclick="login()"
 														class="width-35 pull-right btn btn-sm btn-primary">
 														<i class="icon-key"></i> 登录
 													</button>
@@ -304,7 +304,22 @@
 			var username = $("#username").val();
 			var password = $("#password").val();
 			var vcode = $("#vcode").val();
-			
+			$.ajax({
+				type : "POST",
+				url : "login",
+				data : {"username":username,"password":password,"vcode":vcode},
+				dataType : "json",
+				success : function(data){
+					if(data.succ) {
+						window.location.href = 'index';
+					} else {
+						alert(data.mesg);
+					}
+				},
+				error : function(data){
+					
+				}
+			});
 		}
 	</script>
 	<div style="display: none">
