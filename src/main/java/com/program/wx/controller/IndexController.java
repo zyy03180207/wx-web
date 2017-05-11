@@ -2,6 +2,8 @@ package com.program.wx.controller;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.imageio.ImageIO;
 import javax.servlet.ServletOutputStream;
@@ -15,7 +17,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.JSONPObject;
+import com.db.support.Page;
 import com.program.wx.BaseController;
 import com.program.wx.Global;
 import com.program.wx.param.AjaxResult;
@@ -24,6 +29,7 @@ import com.program.wx.util.StringUtil;
 
 import microservice.api.ServiceApiHelper;
 import microservice.api.ServiceResult;
+import microservice.online.entity.TbFans;
 
 @Controller
 @RequestMapping("/")
@@ -95,11 +101,19 @@ public class IndexController extends BaseController {
 		}
 	}
 	
+	@RequestMapping(value = "loginOut")
+	public ModelAndView loginOut(HttpServletRequest request, HttpServletResponse response) {
+		ModelAndView andView = createMV("login");
+		this.getSession(request).removeAttribute(Global.USER_INFO);
+		this.getSession(request).removeAttribute(Global.SECQURITIES);
+		return andView;
+	}
+	
 	@RequestMapping(value = "randomCode")
-	public void randomCode(HttpServletRequest request, HttpServletResponse response,HttpSession session) {
+	public void randomCode(HttpServletRequest request, HttpServletResponse response) {
 		String s = generateCode(6);
 		BufferedImage image = generateImage(s);
-		session.setAttribute(V_CODE, s);
+		request.getSession().setAttribute(V_CODE, s);
 		response.setContentType("image/jpeg");
 		response.setHeader("Pragma", "No-cache");
 		response.setHeader("Cache-Control", "no-cache");
@@ -113,6 +127,25 @@ public class IndexController extends BaseController {
 		}
 	}
 
+	@RequestMapping(value = "fansList", method = RequestMethod.GET)
+	public ModelAndView fansList(HttpServletRequest request, HttpServletResponse response) {
+		ModelAndView andView = createMV("fanslist");
+		JSONObject object = new JSONObject();
+		String json = ServiceApiHelper.formatParam("tb_fanslist", object.toJSONString(), Global.KEY);
+		String resultStr = remoteApiService.getWXAip().execute(json);
+		ServiceResult result = ServiceApiHelper.parseResult(resultStr);
+		if(result.isSucc()){
+			String data = result.getData();
+			List<TbFans> tbFans = JSONObject.parseArray(data, TbFans.class);
+			andView.addObject("fans", tbFans);
+			Page page = new Page(null, 8, 20, 0, 0);
+			andView.addObject("pages", page);
+		} else {
+			andView.addObject("fans", new ArrayList<TbFans>());
+		}
+		return andView;
+	}
+	
 	public ModelAndView createMV(String jsp) {
 		ModelAndView mv = new ModelAndView(""+jsp);
 		return mv;

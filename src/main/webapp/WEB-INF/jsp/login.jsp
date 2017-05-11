@@ -314,6 +314,7 @@
 						window.location.href = 'index';
 					} else {
 						alert(data.mesg);
+						randomCode();
 					}
 				},
 				error : function(data){

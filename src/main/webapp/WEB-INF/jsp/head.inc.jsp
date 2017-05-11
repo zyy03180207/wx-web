@@ -27,7 +27,9 @@
 		<link rel="stylesheet" href="assets/css/ace.min.css" />
 		<link rel="stylesheet" href="assets/css/ace-rtl.min.css" />
 		<link rel="stylesheet" href="assets/css/ace-skins.min.css" />
-
+		<link rel="stylesheet" href="assets/css/datepicker.css" />
+		<link rel="stylesheet" href="assets/css/bootstrap-timepicker.css" />
+		<link rel="stylesheet" href="assets/css/daterangepicker.css" />
 		<!--[if lte IE 8]>
 		  <link rel="stylesheet" href="assets/css/ace-ie.min.css" />
 		<![endif]-->
@@ -302,7 +304,7 @@
 								<li class="divider"></li>
 
 								<li>
-									<a href="#">
+									<a href="loginOut">
 										<i class="icon-off"></i>
 										退出
 									</a>
@@ -360,40 +362,33 @@
 					</div><!-- #sidebar-shortcuts -->
 
 					<ul class="nav nav-list">
-						<li class="active">
+						<li id="index">
 							<a href="index">
 								<i class="icon-dashboard"></i>
 								<span class="menu-text"> 控制台 </span>
 							</a>
 						</li>
 
-						<li>
+						<li id="fans">
 							<a href="#" class="dropdown-toggle">
-								<i class="icon-text-width"></i>
-								<span class="menu-text"> 文章管理 </span>
+								<i class="icon-heart"></i>
+								<span class="menu-text"> 粉丝管理 </span>
 
 								<b class="arrow icon-angle-down"></b>
 							</a>
 							
 							<ul class="submenu">
-								<li>
-									<a href="elements.html">
+								<li id="fans_list">
+									<a href="fansList">
 										<i class="icon-double-angle-right"></i>
-										发布文章
+										粉丝列表
 									</a>
 								</li>
 
 								<li>
 									<a href="buttons.html">
 										<i class="icon-double-angle-right"></i>
-										删除文章
-									</a>
-								</li>
-
-								<li>
-									<a href="treeview.html">
-										<i class="icon-double-angle-right"></i>
-										文章审核
+										粉丝消息
 									</a>
 								</li>
 							</ul>
